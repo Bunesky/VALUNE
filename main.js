@@ -196,23 +196,13 @@ function resolveTurn() {
 
     isResolving = true;
 
-    // ===============================
-    //   STORE PRE-TURN HP
-    // ===============================
-
+    // guardar vida inicial de reyes
     const kingAStartHp = deckA[4].hp;
     const kingBStartHp = deckB[4].hp;
 
-    // ===============================
-    //   BOTH ACTIONS ALWAYS HAPPEN
-    // ===============================
-
+    // acciones simultáneas
     performAction(selectedA, "A");
     performAction(selectedB, "B");
-
-    // ===============================
-    //   UPDATE
-    // ===============================
 
     setTimeout(() => {
 
@@ -242,27 +232,27 @@ function performAction(cardIndex, player) {
 
     switch (cardIndex) {
 
-        // cleave
+        // CLEAVE
         case 0:
             attackTwoLowest(enemy, 1);
             break;
 
-        // strike 1
+        // STRIKE 1
         case 1:
             attackLowest(enemy, 1);
             break;
 
-        // healer
+        // HEAL 1
         case 2:
-            healLowest(ally, 2);
+            healLowest(ally, 1);
             break;
 
-        // strike 2
+        // STRIKE 2
         case 3:
             attackLowest(enemy, 2);
             break;
 
-        // king strike
+        // KING STRIKE
         case 4:
             attackLowest(enemy, 3);
             break;
@@ -472,13 +462,10 @@ function checkGameEnd(kingAStartHp, kingBStartHp) {
     const endScreen = document.getElementById("end-screen");
     const endMessage = document.getElementById("end-message");
 
-    // ===============================
-    //   BOTH DEAD
-    // ===============================
-
+    // ambos muertos
     if (aliveA === 0 && aliveB === 0) {
 
-        // KING OVERKILL RULE
+        // gana el rey que empezó más sano
         if (kingAStartHp > kingBStartHp) {
 
             endMessage.textContent = "PLAYER A WINS";
@@ -497,10 +484,7 @@ function checkGameEnd(kingAStartHp, kingBStartHp) {
         return;
     }
 
-    // ===============================
-    //   A DEAD
-    // ===============================
-
+    // A muerto
     if (aliveA === 0) {
 
         endMessage.textContent = "PLAYER B WINS";
@@ -510,10 +494,7 @@ function checkGameEnd(kingAStartHp, kingBStartHp) {
         return;
     }
 
-    // ===============================
-    //   B DEAD
-    // ===============================
-
+    // B muerto
     if (aliveB === 0) {
 
         endMessage.textContent = "PLAYER A WINS";
