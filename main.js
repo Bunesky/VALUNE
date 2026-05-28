@@ -200,16 +200,10 @@ function resolveTurn() {
 
     isResolving = true;
 
-    // ORDEN IMPORTANTE:
-    // quien tiene iniciativa actúa primero
-    // si mata al enemigo,
-    // el enemigo YA NO ACTÚA
-
     if (aGoesFirst) {
 
         performAction(selectedA, "A");
 
-        // B solo actúa si sigue vivo
         if (deckB[selectedB].hp > 0) {
             performAction(selectedB, "B");
         }
@@ -218,13 +212,11 @@ function resolveTurn() {
 
         performAction(selectedB, "B");
 
-        // A solo actúa si sigue viva
         if (deckA[selectedA].hp > 0) {
             performAction(selectedA, "A");
         }
     }
 
-    // cambia iniciativa
     aGoesFirst = !aGoesFirst;
 
     setTimeout(() => {
@@ -255,27 +247,22 @@ function performAction(cardIndex, player) {
 
     switch (cardIndex) {
 
-        // splash
         case 0:
             attackTwoLowest(enemy, 1);
             break;
 
-        // pawn
         case 1:
             attackLowest(enemy, 1);
             break;
 
-        // healer
         case 2:
             healLowest(ally, 2);
             break;
 
-        // elite
         case 3:
             attackLowest(enemy, 2);
             break;
 
-        // king
         case 4:
             attackLowest(enemy, 3);
             break;
@@ -295,18 +282,14 @@ function getValidTargets(enemyDeck) {
         return [];
     }
 
-    // unidades normales vivas
     const nonKingAlive = enemyDeck.filter(
         (card, index) => index !== 4 && card.hp > 0
     );
 
-    // mientras existan normales,
-    // rey protegido
     if (nonKingAlive.length > 0) {
         return nonKingAlive;
     }
 
-    // solo queda rey
     return [enemyDeck[4]];
 }
 
@@ -422,6 +405,14 @@ function animateDamage(targetCard, deck) {
 
     if (!el) return;
 
+    // ⭐ ARREGLO: animación más fuerte para que se vea igual en A y B
+    el.style.transition = "transform 0.1s";
+    el.style.transform += " translateX(-8px)";
+
+    setTimeout(() => {
+        el.style.transform = el.style.transform.replace(" translateX(-8px)", "");
+    }, 100);
+
     el.classList.add("hit");
 
     setTimeout(() => {
@@ -491,7 +482,6 @@ function checkGameEnd() {
     const endScreen = document.getElementById("end-screen");
     const endMessage = document.getElementById("end-message");
 
-    // empate
     if (aliveA === 0 && aliveB === 0) {
 
         endMessage.textContent = "DRAW";
@@ -501,7 +491,6 @@ function checkGameEnd() {
         return;
     }
 
-    // gana B
     if (aliveA === 0) {
 
         endMessage.textContent = "PLAYER B WINS";
@@ -511,7 +500,6 @@ function checkGameEnd() {
         return;
     }
 
-    // gana A
     if (aliveB === 0) {
 
         endMessage.textContent = "PLAYER A WINS";
