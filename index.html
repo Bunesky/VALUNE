@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VALUNE</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- BACKGROUND -->
+    <div id="background-glow"></div>
+
+    <!-- MUSIC -->
+    <audio id="bgm"
+           src="sounds/bg_music.mp3"
+           loop
+           preload="auto"
+           playsinline>
+    </audio>
+
+    <!-- LEFT PANEL -->
+    <div class="side-panel left-panel">
+        <div class="side-text">
+            BOTH PLAYERS SELECT A CARD
+        </div>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="side-panel right-panel">
+        <div class="side-text">
+            TARGET: LOWEST HP
+        </div>
+    </div>
+
+    <!-- MAIN -->
+    <div id="game-root">
+
+        <!-- TITLE -->
+        <div id="game-title">
+            VALUNE
+        </div>
+
+        <!-- BOARD -->
+        <div id="board-container">
+
+            <div id="board">
+
+                <!-- ========================= -->
+                <!-- PLAYER B -->
+                <!-- ========================= -->
+
+                <div class="side side-b">
+
+                    <div class="player-label rotated">
+                        PLAYER B
+                    </div>
+
+                    <!-- KING -->
+                    <div class="row row-king">
+
+                        <div class="card-info left rotated">
+                            STRIKE 3
+                        </div>
+
+                        <div class="card-slot king-slot"
+                             data-player="B"
+                             data-index="4">
+                        </div>
+
+                        <div class="card-info right rotated"></div>
+
+                    </div>
+
+                    <!-- MID -->
+                    <div class="row row-mid-heal">
+
+                        <div class="card-info left rotated">
+                            STRIKE 2
+                        </div>
+
+                        <div class="card-slot"
+                             data-player="B"
+                             data-index="3">
+                        </div>
+
+                        <div class="card-slot"
+                             data-player="B"
+                             data-index="2">
+                        </div>
+
+                        <div class="card-info right rotated">
+                            HEAL 2
+                        </div>
+
+                    </div>
+
+                    <!-- PAWNS -->
+                    <div class="row row-pawns">
+
+                        <div class="card-info left rotated">
+                            CLEAVE 1
+                        </div>
+
+                        <div class="card-slot"
+                             data-player="B"
+                             data-index="0">
+                        </div>
+
+                        <div class="card-slot"
+                             data-player="B"
+                             data-index="1">
+                        </div>
+
+                        <div class="card-info right rotated">
+                            STRIKE 1
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- CENTER LINE -->
+                <div id="battle-line"></div>
+
+                <!-- ========================= -->
+                <!-- PLAYER A -->
+                <!-- ========================= -->
+
+                <div class="side side-a">
+
+                    <!-- PAWNS -->
+                    <div class="row row-pawns">
+
+                        <div class="card-info left">
+                            CLEAVE 1
+                        </div>
+
+                        <div class="card-slot"
+                             data-player="A"
+                             data-index="0">
+                        </div>
+
+                        <div class="card-slot"
+                             data-player="A"
+                             data-index="1">
+                        </div>
+
+                        <div class="card-info right">
+                            STRIKE 1
+                        </div>
+
+                    </div>
+
+                    <!-- MID -->
+                    <div class="row row-mid-heal">
+
+                        <div class="card-info left">
+                            HEAL 2
+                        </div>
+
+                        <div class="card-slot"
+                             data-player="A"
+                             data-index="2">
+                        </div>
+
+                        <div class="card-slot"
+                             data-player="A"
+                             data-index="3">
+                        </div>
+
+                        <div class="card-info right">
+                            STRIKE 2
+                        </div>
+
+                    </div>
+
+                    <!-- KING -->
+                    <div class="row row-king">
+
+                        <div class="card-info left"></div>
+
+                        <div class="card-slot king-slot"
+                             data-player="A"
+                             data-index="4">
+                        </div>
+
+                        <div class="card-info right">
+                            STRIKE 3
+                        </div>
+
+                    </div>
+
+                    <div class="player-label">
+                        PLAYER A
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- END SCREEN -->
+        <div id="end-screen" class="hidden">
+
+            <div id="end-box">
+
+                <div id="end-message">
+                    PLAYER A WINS
+                </div>
+
+                <button id="restart-button">
+                    PLAY AGAIN
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="main.js"></script>
+
+</body>
+
+</html>
