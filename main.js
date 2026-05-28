@@ -42,10 +42,8 @@ const deckB = [
 let selectedA = null;
 let selectedB = null;
 
-// alterna iniciativa cada turno
 let aGoesFirst = true;
 
-// evita doble input
 let isResolving = false;
 
 
@@ -147,13 +145,10 @@ function enableCardAction(cardEl, player, index) {
 
         const card = deck[index];
 
-        // carta muerta
         if (card.hp <= 0) return;
 
-        // rey bloqueado
         if (index === 4 && !canUseKing(deck)) return;
 
-        // PLAYER A
         if (player === "A" && selectedA === null) {
 
             selectedA = index;
@@ -170,7 +165,6 @@ function enableCardAction(cardEl, player, index) {
             return;
         }
 
-        // PLAYER B
         if (player === "B" && selectedB === null) {
 
             selectedB = index;
@@ -405,19 +399,15 @@ function animateDamage(targetCard, deck) {
 
     if (!el) return;
 
-    // ⭐ ARREGLO: animación más fuerte para que se vea igual en A y B
-    el.style.transition = "transform 0.1s";
-    el.style.transform += " translateX(-8px)";
+    // ⭐ NUEVO EFECTO ROJO (SIN TEMBLOR)
+    el.style.transition = "filter 0.25s, box-shadow 0.25s";
+    el.style.filter = "brightness(1.6) saturate(2) hue-rotate(-20deg)";
+    el.style.boxShadow = "0 0 25px rgba(255,0,0,0.75)";
 
     setTimeout(() => {
-        el.style.transform = el.style.transform.replace(" translateX(-8px)", "");
-    }, 100);
-
-    el.classList.add("hit");
-
-    setTimeout(() => {
-        el.classList.remove("hit");
-    }, 300);
+        el.style.filter = "";
+        el.style.boxShadow = "";
+    }, 250);
 }
 
 
