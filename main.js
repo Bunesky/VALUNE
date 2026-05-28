@@ -42,8 +42,6 @@ const deckB = [
 let selectedA = null;
 let selectedB = null;
 
-let aGoesFirst = true;
-
 let isResolving = false;
 
 
@@ -145,10 +143,13 @@ function enableCardAction(cardEl, player, index) {
 
         const card = deck[index];
 
+        // dead
         if (card.hp <= 0) return;
 
+        // king locked
         if (index === 4 && !canUseKing(deck)) return;
 
+        // PLAYER A
         if (player === "A" && selectedA === null) {
 
             selectedA = index;
@@ -165,6 +166,7 @@ function enableCardAction(cardEl, player, index) {
             return;
         }
 
+        // PLAYER B
         if (player === "B" && selectedB === null) {
 
             selectedB = index;
@@ -194,24 +196,23 @@ function resolveTurn() {
 
     isResolving = true;
 
-    if (aGoesFirst) {
+    // ===============================
+    //   STORE PRE-TURN HP
+    // ===============================
 
-        performAction(selectedA, "A");
+    const kingAStartHp = deckA[4].hp;
+    const kingBStartHp = deckB[4].hp;
 
-        if (deckB[selectedB].hp > 0) {
-            performAction(selectedB, "B");
-        }
+    // ===============================
+    //   BOTH ACTIONS ALWAYS HAPPEN
+    // ===============================
 
-    } else {
+    performAction(selectedA, "A");
+    performAction(selectedB, "B");
 
-        performAction(selectedB, "B");
-
-        if (deckA[selectedA].hp > 0) {
-            performAction(selectedA, "A");
-        }
-    }
-
-    aGoesFirst = !aGoesFirst;
+    // ===============================
+    //   UPDATE
+    // ===============================
 
     setTimeout(() => {
 
@@ -222,14 +223,14 @@ function resolveTurn() {
 
         isResolving = false;
 
-        checkGameEnd();
+        checkGameEnd(kingAStartHp, kingBStartHp);
 
     }, 350);
 }
 
 
 // ===============================
-//   EXECUTE ACTION BY TYPE
+//   EXECUTE ACTION
 // ===============================
 
 function performAction(cardIndex, player) {
@@ -241,22 +242,27 @@ function performAction(cardIndex, player) {
 
     switch (cardIndex) {
 
+        // cleave
         case 0:
             attackTwoLowest(enemy, 1);
             break;
 
+        // strike 1
         case 1:
             attackLowest(enemy, 1);
             break;
 
+        // healer
         case 2:
             healLowest(ally, 2);
             break;
 
+        // strike 2
         case 3:
             attackLowest(enemy, 2);
             break;
 
+        // king strike
         case 4:
             attackLowest(enemy, 3);
             break;
@@ -276,6 +282,7 @@ function getValidTargets(enemyDeck) {
         return [];
     }
 
+    // king protected while allies alive
     const nonKingAlive = enemyDeck.filter(
         (card, index) => index !== 4 && card.hp > 0
     );
@@ -304,18 +311,10 @@ function attackLowest(enemyDeck, damage) {
 
     target.hp -= damage;
 
-    if (target.hp < 0) {
-        target.hp = 0;
-    }
-
     attackSound.currentTime = 0;
     attackSound.play();
 
     animateDamage(target, enemyDeck);
-
-    if (target.hp === 0) {
-        animateDeath(target, enemyDeck);
-    }
 }
 
 
@@ -343,15 +342,7 @@ function attackTwoLowest(enemyDeck, damage) {
 
         target.hp -= damage;
 
-        if (target.hp < 0) {
-            target.hp = 0;
-        }
-
         animateDamage(target, enemyDeck);
-
-        if (target.hp === 0) {
-            animateDeath(target, enemyDeck);
-        }
     });
 }
 
@@ -384,6 +375,21 @@ function healLowest(allyDeck, amount) {
 
 
 // ===============================
+//   CLEAN DEAD CARDS
+// ===============================
+
+function finalizeDeaths(deck) {
+
+    deck.forEach(card => {
+
+        if (card.hp <= 0) {
+            card.hp = 0;
+        }
+    });
+}
+
+
+// ===============================
 //   ANIMATIONS
 // ===============================
 
@@ -399,14 +405,19 @@ function animateDamage(targetCard, deck) {
 
     if (!el) return;
 
-    // ⭐ NUEVO EFECTO ROJO (SIN TEMBLOR)
     el.style.transition = "filter 0.25s, box-shadow 0.25s";
-    el.style.filter = "brightness(1.6) saturate(2) hue-rotate(-20deg)";
-    el.style.boxShadow = "0 0 25px rgba(255,0,0,0.75)";
+
+    el.style.filter =
+        "brightness(1.6) saturate(2) hue-rotate(-20deg)";
+
+    el.style.boxShadow =
+        "0 0 25px rgba(255,0,0,0.75)";
 
     setTimeout(() => {
+
         el.style.filter = "";
         el.style.boxShadow = "";
+
     }, 250);
 }
 
@@ -426,24 +437,10 @@ function animateHeal(targetCard, deck) {
     el.classList.add("heal");
 
     setTimeout(() => {
+
         el.classList.remove("heal");
+
     }, 300);
-}
-
-
-function animateDeath(targetCard, deck) {
-
-    const index = deck.indexOf(targetCard);
-
-    const player = deck === deckA ? "A" : "B";
-
-    const el = document.querySelector(
-        `.card-slot[data-player="${player}"][data-index="${index}"] .card`
-    );
-
-    if (!el) return;
-
-    el.classList.add("dead");
 }
 
 
@@ -452,6 +449,9 @@ function animateDeath(targetCard, deck) {
 // ===============================
 
 function updateBoard() {
+
+    finalizeDeaths(deckA);
+    finalizeDeaths(deckB);
 
     document.querySelectorAll(".card").forEach(el => el.remove());
 
@@ -464,7 +464,7 @@ function updateBoard() {
 //   CHECK GAME END
 // ===============================
 
-function checkGameEnd() {
+function checkGameEnd(kingAStartHp, kingBStartHp) {
 
     const aliveA = deckA.filter(c => c.hp > 0).length;
     const aliveB = deckB.filter(c => c.hp > 0).length;
@@ -472,14 +472,34 @@ function checkGameEnd() {
     const endScreen = document.getElementById("end-screen");
     const endMessage = document.getElementById("end-message");
 
+    // ===============================
+    //   BOTH DEAD
+    // ===============================
+
     if (aliveA === 0 && aliveB === 0) {
 
-        endMessage.textContent = "DRAW";
+        // KING OVERKILL RULE
+        if (kingAStartHp > kingBStartHp) {
+
+            endMessage.textContent = "PLAYER A WINS";
+
+        } else if (kingBStartHp > kingAStartHp) {
+
+            endMessage.textContent = "PLAYER B WINS";
+
+        } else {
+
+            endMessage.textContent = "DRAW";
+        }
 
         endScreen.classList.remove("hidden");
 
         return;
     }
+
+    // ===============================
+    //   A DEAD
+    // ===============================
 
     if (aliveA === 0) {
 
@@ -489,6 +509,10 @@ function checkGameEnd() {
 
         return;
     }
+
+    // ===============================
+    //   B DEAD
+    // ===============================
 
     if (aliveB === 0) {
 
