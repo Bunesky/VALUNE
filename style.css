@@ -394,8 +394,10 @@ body {
         transform-origin: top center;
 
         padding: 0;
-        margin-top: 40px;
-        margin-bottom: 40px;
+
+        /* AIRE REAL PARA QUE NO SE CORTEN LOS REYES */
+        margin-top: 70px;
+        margin-bottom: 70px;
     }
 
     /* OCULTAR PANELES LATERALES */
@@ -405,7 +407,7 @@ body {
 
     /* REDUCIR ALTURA ENTRE FILAS */
     #board {
-        gap: 18px;
+        gap: 16px;
     }
 
     /* REDUCIR CARTAS */
