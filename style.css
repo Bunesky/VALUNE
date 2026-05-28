@@ -378,7 +378,7 @@ body {
 
 
 /* ===============================
-   MOBILE — SOLUCIÓN COMPLETA
+   MOBILE — SOLUCIÓN FINAL
    =============================== */
 
 @media (max-width: 1100px) {
@@ -388,17 +388,24 @@ body {
         display: none;
     }
 
-    /* ESCALAR TABLERO COMPLETO */
+    /* ESCALAR TABLERO + ESPACIO ARRIBA/ABAJO */
     #board-container {
-        transform: scale(0.78);
+        transform: scale(0.70);
         transform-origin: top center;
+
         padding: 0;
-        margin-top: 0;
+        margin-top: 40px;
+        margin-bottom: 40px;
     }
 
     /* OCULTAR PANELES LATERALES */
     .side-panel {
         display: none;
+    }
+
+    /* REDUCIR ALTURA ENTRE FILAS */
+    #board {
+        gap: 18px;
     }
 
     /* REDUCIR CARTAS */
