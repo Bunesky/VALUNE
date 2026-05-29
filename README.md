@@ -1,2 +1,2 @@
-Your site is live at https://bunesky.github.io/VALUNE/
+Play VALUNE on itch.io:
 https://bunesky.itch.io/valune
